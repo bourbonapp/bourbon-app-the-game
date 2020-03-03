@@ -1,0 +1,18 @@
+.game {
+  text-align: left;
+}
+
+.buttons {
+  list-style-type: none;
+}
+
+.inventory-list {
+  list-style-type: none;
+}
+
+.farm {
+  border-width: 10px;
+  border-color: green;
+  display: flex;
+  flex-direction: row;
+}
