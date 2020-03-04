@@ -3,23 +3,61 @@ import Farm from '../farm/Farm';
 import { Button, ButtonGroup, Card } from '@blueprintjs/core';
 
 class FarmPanel extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            farmItems: [],
+        }
+        // this.plantSeed = this.plantSeed.bind(this);
+    }
+
+    plantSeed(seedType) {
+        if (this.state.farmItems.length < maxFarmItems) {
+            const farmItems = this.state.farmItems.slice();
+            this.setState({
+                farmItems: farmItems.concat([
+                    { type: seedType, progress: 0 }
+                ]),
+            })
+        }
+    }
+
     render() {
         return (
             <React.Fragment>
                 <h2>Farm:</h2>
                 <div className="farm">
-                    <Farm farmItems={farmItems} />
-                    Plant:
+                    <Farm
+                        farmItems={this.state.farmItems}
+                        handleInventoryChange={this.props.handleInventoryChange}
+                    />
                     <Card>
+                        <p>Plant seeds:</p>
                         <ButtonGroup
-                            fill={true}
+                            fill={false}
                             large={true}
                             vertical={true}
                         >
-                            <Button intent="success">Corn</Button>
-                            <Button intent="success">Wheat</Button>
-                            <Button intent="success">Rye</Button>
-                            <Button intent="success">Barley</Button>
+                            <Button
+                                intent="success"
+                                onClick={() => this.plantSeed("corn")}
+                                disabled={this.state.farmItems.length >= maxFarmItems}
+                            >Corn</Button>
+                            <Button
+                                intent="success"
+                                onClick={() => this.plantSeed("wheat")}
+                                disabled={this.state.farmItems.length >= maxFarmItems}
+                            >Wheat</Button>
+                            <Button
+                                intent="success"
+                                onClick={() => this.plantSeed("rye")}
+                                disabled={this.state.farmItems.length >= maxFarmItems}
+                            >Rye</Button>
+                            <Button
+                                intent="success"
+                                onClick={() => this.plantSeed("barley")}
+                                disabled={this.state.farmItems.length >= maxFarmItems}
+                            >Barley</Button>
                         </ButtonGroup>
                     </Card>
                 </div>
@@ -28,11 +66,6 @@ class FarmPanel extends Component {
     }
 }
 
-const farmItems = [
-    {type: "corn", progress: 0.5},
-    {type: "corn", progress: 1},
-    {type: "wheat", progress: 0.25},
-    {type: "rye", progress: 0}
-];
+const maxFarmItems = 5;
 
 export default FarmPanel;

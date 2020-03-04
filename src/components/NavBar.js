@@ -11,15 +11,15 @@ class NavBar extends Component {
                     </Navbar.Heading>
                 </Navbar.Group>
                 <Navbar.Group align={Alignment.RIGHT}>
-                    <Navbar.Heading>Money</Navbar.Heading>
+                    <Navbar.Heading>Money: {this.props.inventory.money}</Navbar.Heading>
                     <Navbar.Divider />
-                    <Navbar.Heading>Corn</Navbar.Heading>
+                    <Navbar.Heading>Corn: {this.props.inventory.corn}</Navbar.Heading>
                     <Navbar.Divider />
-                    <Navbar.Heading>Wheat</Navbar.Heading>
+                    <Navbar.Heading>Wheat: {this.props.inventory.wheat}</Navbar.Heading>
                     <Navbar.Divider />
-                    <Navbar.Heading>Rye</Navbar.Heading>
+                    <Navbar.Heading>Rye: {this.props.inventory.rye}</Navbar.Heading>
                     <Navbar.Divider />
-                    <Navbar.Heading>Barley</Navbar.Heading>
+                    <Navbar.Heading>Barley: {this.props.inventory.barley}</Navbar.Heading>
                 </Navbar.Group>
             </Navbar>
         );

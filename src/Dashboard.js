@@ -10,55 +10,69 @@ class Dashboard extends Component {
         super(props);
         this.state = {
             panelId: "farm",
+            inventory: {
+                corn: 0,
+                wheat: 0,
+                rye: 0,
+                barley: 0,
+                money: 0,
+            }
         };
         this.handlePanelChange = this.handlePanelChange.bind(this);
+        this.handleInventoryChange = this.handleInventoryChange.bind(this);
     }
-    
-    
+
+
     handlePanelChange(tabId) {
         this.setState({
             panelId: tabId,
         });
     }
 
+    handleInventoryChange(inventoryKey, value) {
+        let inventory = this.state.inventory;
+        inventory[inventoryKey] += value;
+        this.setState({
+            inventory: inventory,
+        });
+    }
+
     render() {
-        let currentScreen = labelNames[farmKey];
-        let open = true;
         return (
             <React.Fragment>
-                <NavBar label={labelNames[this.state.panelId]} />
-                <Tabs 
+                <NavBar label={labelNames[this.state.panelId]} inventory={this.state.inventory} />
+                <Tabs
                     selectedTabId={this.state.panelId}
                     onChange={this.handlePanelChange}
                     vertical="true"
                 >
-                    {Object.keys(labelNames).map((key) => (
-                        <Tab
-                            id={key}
-                            title={labelNames[key]}
-                            panel={panels[key]}
-                        />
-                    ))}
+                    <Tab
+                        id="farm"
+                        title="Farm"
+                        panel={<FarmPanel
+                            handleInventoryChange={this.handleInventoryChange}
+                        />}
+                    />
+                    <Tab
+                        id="distillery"
+                        title="Distillery"
+                        panel={<DistilleryPanel />}
+                    />
+                    <Tab
+                        id="market"
+                        title="Market"
+                        panel={<MarketPanel />}
+                    />
                 </Tabs>
             </React.Fragment>
         )
     }
 }
 
-const farmKey = "farm";
-const distilleryKey = "distillery";
-const marketKey = "market";
-
 const labelNames = {
     farm: "Farm",
     distillery: "Distillery",
     market: "Market",
 };
-
-const panels = {
-    farm: <FarmPanel />,
-    distillery: <DistilleryPanel />,
-    market: <MarketPanel />
-}
 
 export default Dashboard;
