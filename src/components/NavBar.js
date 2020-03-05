@@ -11,7 +11,7 @@ class NavBar extends Component {
                     </Navbar.Heading>
                 </Navbar.Group>
                 <Navbar.Group align={Alignment.RIGHT}>
-                    <Navbar.Heading>Money: {this.props.inventory.money}</Navbar.Heading>
+                    <Navbar.Heading>Money: ${this.props.inventory.money.toFixed(2)}</Navbar.Heading>
                     <Navbar.Divider />
                     <Navbar.Heading>Corn: {this.props.inventory.corn}</Navbar.Heading>
                     <Navbar.Divider />
@@ -20,6 +20,8 @@ class NavBar extends Component {
                     <Navbar.Heading>Rye: {this.props.inventory.rye}</Navbar.Heading>
                     <Navbar.Divider />
                     <Navbar.Heading>Barley: {this.props.inventory.barley}</Navbar.Heading>
+                    <Navbar.Divider />
+                    <Navbar.Heading>Yeast: {this.props.inventory.yeast}</Navbar.Heading>
                 </Navbar.Group>
             </Navbar>
         );

@@ -15,4 +15,55 @@
   border-color: green;
   display: flex;
   flex-direction: row;
+  text-align: center;
+}
+
+.farmPanelButtons {
+  min-width: 10vw;
+  min-height: 25vh;
+  margin: 6px;
+}
+
+.farmPanelSeedButton {
+  margin-bottom: 4px;
+  min-width: 100%;
+}
+
+
+.farmPanelFarm {
+  min-width: 25vw;
+  margin: 6px;
+}
+
+.farmItem {
+  margin: 4px;
+  min-height: 10vh;
+}
+
+.market {
+  display: flex;
+  flex-direction: row;
+  text-align: center;
+}
+
+.marketBuy {
+  margin: 6px;
+}
+
+.marketSell {
+  margin: 6px;
+}
+
+.mashBillDialog {
+  padding: 12px;
+}
+
+.mashBillFormWarning {
+  color: red;
+}
+
+.distillery {
+  display: flex;
+  flex-direction: row;
+  text-align: center;
 }

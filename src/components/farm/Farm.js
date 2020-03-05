@@ -1,72 +1,56 @@
 import React, { Component } from 'react';
-import { Card, Elevation, Intent, ProgressBar } from '@blueprintjs/core';
-
-class FarmItem extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            progress: this.props.progress,
-            harvested: false,
-        };
-    }
-
-    componentDidMount() {
-        this.interval = setInterval(() => {
-            this.setState({
-                progress: this.state.progress + 0.1
-            })
-        }, 500);
-    }
-
-    componentWillUnmount() {
-        clearInterval(this.interval);
-    }
-
-    render() {
-        if (this.state.progress >= 1.0 && !this.state.harvested) {
-            clearInterval(this.interval);
-            this.props.handleInventoryChange(this.props.type, 1);
-            this.setState({
-                harvested: true
-            });
-        }
-        if (this.state.progress >= 1.0) {
-            return (
-                <Card elevation={Elevation.TWO}>
-                    {this.props.type} Complete!
-                </Card>
-            );
-        }
-        return (
-            <Card elevation={Elevation.TWO} >
-
-                Type: {this.props.type}<br />
-                Progress:
-<ProgressBar
-                    intent={Intent.PRIMARY}
-                    stripes={false}
-                    value={this.state.progress}
-                />
-            </Card >
-        )
-    }
-}
+import { Card, Elevation, } from '@blueprintjs/core';
+import FarmItem from './FarmItem';
 
 class Farm extends Component {
     render() {
         return (
-            <Card elevation={Elevation.ONE}>
-                {this.props.farmItems.map((farmItem, index) => (
+            <Card className="farmPanelFarm" elevation={Elevation.ONE}>
+                {this.props.farmItems.length > 0 ? this.props.farmItems.map((farmItem) => (
                     <FarmItem
-                        key={index}
+                        key={farmItem.id}
+                        id={farmItem.id}
                         type={farmItem.type}
                         progress={farmItem.progress}
-                        handleInventoryChange={this.props.handleInventoryChange}
+                        stats={farmItemStats[farmItem.type]}
+                        handleHarvest={this.props.handleHarvest}
+                        handleToast={this.props.handleToast}
                     />
-                ))}
+                )) : (
+                    <React.Fragment>
+                        Nothing being farmed!
+                    </React.Fragment>
+                )}
             </Card>
         )
     }
+}
+
+const farmItemStats = {
+    corn: {
+        harvestMin: 1,
+        harvestMax: 3,
+        timeMin: 3.0,
+        timeMax: 10.0,
+    },
+    wheat: {
+        harvestMin: 2,
+        harvestMax: 5,
+        timeMin: 6.0,
+        timeMax: 12.0,
+    },
+    rye: {
+        harvestMin: 1,
+        harvestMax: 2,
+        timeMin: 2.0,
+        timeMax: 8.5,
+    },
+    barley: {
+        harvestMin: 3,
+        harvestMax: 10,
+        timeMin: 8.5,
+        timeMax: 17.5,
+    },
 }
 
 export default Farm;

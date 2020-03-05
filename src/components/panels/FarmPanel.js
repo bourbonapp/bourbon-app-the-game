@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Farm from '../farm/Farm';
-import { Button, ButtonGroup, Card } from '@blueprintjs/core';
+import { Button, ButtonGroup, Card, Elevation } from '@blueprintjs/core';
+import { generateId } from '../Utility';
 
 class FarmPanel extends Component {
     constructor(props) {
@@ -8,7 +9,7 @@ class FarmPanel extends Component {
         this.state = {
             farmItems: [],
         }
-        // this.plantSeed = this.plantSeed.bind(this);
+        this.handleHarvest = this.handleHarvest.bind(this);
     }
 
     plantSeed(seedType) {
@@ -16,10 +17,28 @@ class FarmPanel extends Component {
             const farmItems = this.state.farmItems.slice();
             this.setState({
                 farmItems: farmItems.concat([
-                    { type: seedType, progress: 0 }
+                    {
+                        id: generateId('farmItem'),
+                        type: seedType,
+                        progress: 0,
+                    }
                 ]),
             })
+            this.props.handleInventoryChange('money', -seedPrices[seedType])
         }
+    }
+
+    handleHarvest(farmItemId, value) {
+        const harvestedItem = this.state.farmItems.find(farmItem => farmItem.id === farmItemId);
+        const farmItems = this.state.farmItems.filter(farmItem => farmItem.id !== farmItemId);
+        this.setState({
+            farmItems: farmItems,
+        })
+        this.props.handleInventoryChange(harvestedItem.type, value);
+        this.props.handleToast({
+            intent: 'success',
+            message: 'Harvested ' + value + ' ' + harvestedItem.type + '(s)!',
+        })
     }
 
     render() {
@@ -29,36 +48,39 @@ class FarmPanel extends Component {
                 <div className="farm">
                     <Farm
                         farmItems={this.state.farmItems}
-                        handleInventoryChange={this.props.handleInventoryChange}
+                        handleHarvest={this.handleHarvest}
+                        handleToast={this.props.handleToast}
                     />
-                    <Card>
+                    <Card className="farmPanelButtons" elevation={Elevation.ONE}>
                         <p>Plant seeds:</p>
-                        <ButtonGroup
-                            fill={false}
+                        <Button
+                            className="farmPanelSeedButton"
                             large={true}
-                            vertical={true}
-                        >
-                            <Button
-                                intent="success"
-                                onClick={() => this.plantSeed("corn")}
-                                disabled={this.state.farmItems.length >= maxFarmItems}
-                            >Corn</Button>
-                            <Button
-                                intent="success"
-                                onClick={() => this.plantSeed("wheat")}
-                                disabled={this.state.farmItems.length >= maxFarmItems}
-                            >Wheat</Button>
-                            <Button
-                                intent="success"
-                                onClick={() => this.plantSeed("rye")}
-                                disabled={this.state.farmItems.length >= maxFarmItems}
-                            >Rye</Button>
-                            <Button
-                                intent="success"
-                                onClick={() => this.plantSeed("barley")}
-                                disabled={this.state.farmItems.length >= maxFarmItems}
-                            >Barley</Button>
-                        </ButtonGroup>
+                            intent="success"
+                            onClick={() => this.plantSeed("corn")}
+                            disabled={this.state.farmItems.length >= maxFarmItems || this.props.inventory.money < seedPrices.corn}
+                        >Corn</Button> (${seedPrices.corn.toFixed(2)})<br/>
+                        <Button
+                            className="farmPanelSeedButton"
+                            large={true}
+                            intent="success"
+                            onClick={() => this.plantSeed("wheat")}
+                            disabled={this.state.farmItems.length >= maxFarmItems || this.props.inventory.money < seedPrices.wheat}
+                        >Wheat</Button> (${seedPrices.wheat.toFixed(2)})<br/>
+                        <Button
+                            className="farmPanelSeedButton"
+                            large={true}
+                            intent="success"
+                            onClick={() => this.plantSeed("rye")}
+                            disabled={this.state.farmItems.length >= maxFarmItems || this.props.inventory.money < seedPrices.rye}
+                        >Rye</Button> (${seedPrices.rye.toFixed(2)})<br/>
+                        <Button
+                            className="farmPanelSeedButton"
+                            large={true}
+                            intent="success"
+                            onClick={() => this.plantSeed("barley")}
+                            disabled={this.state.farmItems.length >= maxFarmItems || this.props.inventory.money < seedPrices.barley}
+                        >Barley</Button> (${seedPrices.barley.toFixed(2)})<br/>
                     </Card>
                 </div>
             </React.Fragment>
@@ -67,5 +89,12 @@ class FarmPanel extends Component {
 }
 
 const maxFarmItems = 5;
+
+const seedPrices = {
+    corn: 2.50,
+    wheat: 12.50,
+    rye: 15.00,
+    barley: 25.00
+}
 
 export default FarmPanel;

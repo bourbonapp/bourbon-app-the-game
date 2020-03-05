@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Tab, Tabs } from '@blueprintjs/core';
+import { Tab, Tabs, Toaster } from '@blueprintjs/core';
 import NavBar from './components/NavBar';
 import FarmPanel from './components/panels/FarmPanel';
 import DistilleryPanel from './components/panels/DistilleryPanel';
@@ -15,13 +15,22 @@ class Dashboard extends Component {
                 wheat: 0,
                 rye: 0,
                 barley: 0,
-                money: 0,
+                yeast: 0,
+                money: 15,
             }
         };
         this.handlePanelChange = this.handlePanelChange.bind(this);
         this.handleInventoryChange = this.handleInventoryChange.bind(this);
+        this.handleToast = this.handleToast.bind(this);
     }
 
+    setToasterRef = (ref) => {
+        this.toaster = ref;
+    }
+
+    handleToast(toast) {
+        this.toaster.show(toast);
+    }
 
     handlePanelChange(tabId) {
         this.setState({
@@ -40,7 +49,10 @@ class Dashboard extends Component {
     render() {
         return (
             <React.Fragment>
-                <NavBar label={labelNames[this.state.panelId]} inventory={this.state.inventory} />
+                <NavBar
+                    label={labelNames[this.state.panelId]}
+                    inventory={this.state.inventory}    
+                />
                 <Tabs
                     selectedTabId={this.state.panelId}
                     onChange={this.handlePanelChange}
@@ -50,20 +62,29 @@ class Dashboard extends Component {
                         id="farm"
                         title="Farm"
                         panel={<FarmPanel
+                            inventory={this.state.inventory}
                             handleInventoryChange={this.handleInventoryChange}
+                            handleToast={this.handleToast}
                         />}
                     />
                     <Tab
                         id="distillery"
                         title="Distillery"
-                        panel={<DistilleryPanel />}
+                        panel={<DistilleryPanel
+                            inventory={this.state.inventory}
+                            handleInventoryChange={this.handleInventoryChange}
+                        />}
                     />
                     <Tab
                         id="market"
                         title="Market"
-                        panel={<MarketPanel />}
+                        panel={<MarketPanel
+                            inventory={this.state.inventory}
+                            handleInventoryChange={this.handleInventoryChange}
+                        />}
                     />
                 </Tabs>
+                <Toaster ref={this.setToasterRef} />
             </React.Fragment>
         )
     }
