@@ -63,7 +63,8 @@ const prices = {
     wheat: 7.50,
     rye: 10,
     barley: 15,
-    yeast: 1.50
+    yeast: 1.50,
+    newBarrels: 75.00,
 }
 
 export default MarketBuy;

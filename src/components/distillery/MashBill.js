@@ -17,10 +17,10 @@ class MashBill extends Component {
     }
 
     render() {
-        const corn = this.props.corn * 100;
-        const wheat = this.props.wheat * 100;
-        const rye = this.props.rye * 100;
-        const barley = this.props.barley * 100;
+        const corn = this.props.corn.toFixed(2);
+        const wheat = this.props.wheat.toFixed(2);
+        const rye = this.props.rye.toFixed(2);
+        const barley = this.props.barley.toFixed(2);
 
         return (
             <React.Fragment>
@@ -37,10 +37,10 @@ class MashBill extends Component {
                     onClose={this.toggleMashbillDialog}
                 >
                     <h3>{this.props.name}</h3>
-                    <p>Corn: {corn.toFixed(2)}%</p>
-                    <p>Wheat: {wheat.toFixed(2)}%</p>
-                    <p>Rye: {rye.toFixed(2)}%</p>
-                    <p>Barley: {barley.toFixed(2)}%</p>
+                    <p>Corn: {corn}%</p>
+                    <p>Wheat: {wheat}%</p>
+                    <p>Rye: {rye}%</p>
+                    <p>Barley: {barley}%</p>
                     <Button intent="primary" onClick={this.toggleMashbillDialog}>Close</Button>
                     <Button intent="danger" onClick={() => this.props.handleDeleteMashBill(this.props.id)}>Delete</Button>
                 </Dialog>

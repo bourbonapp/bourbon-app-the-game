@@ -11,12 +11,14 @@ class Dashboard extends Component {
         this.state = {
             panelId: "farm",
             inventory: {
-                corn: 0,
-                wheat: 0,
-                rye: 0,
-                barley: 0,
-                yeast: 0,
-                money: 15,
+                corn: 100,
+                wheat: 100,
+                rye: 100,
+                barley: 100,
+                yeast: 100,
+                newBarrels: 0,
+                usedBarrels: 0,
+                money: 1500,
             }
         };
         this.handlePanelChange = this.handlePanelChange.bind(this);
@@ -51,7 +53,7 @@ class Dashboard extends Component {
             <React.Fragment>
                 <NavBar
                     label={labelNames[this.state.panelId]}
-                    inventory={this.state.inventory}    
+                    inventory={this.state.inventory}
                 />
                 <Tabs
                     selectedTabId={this.state.panelId}

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Card, Button, Dialog, NumericInput, FormGroup } from '@blueprintjs/core';
+import Mash from '../distillery/Mash'
 import MashBill from '../distillery/MashBill';
 import MashBillForm from '../distillery/MashBillForm';
 import FermentingMashForm from '../distillery/FermentingMashForm';
@@ -18,6 +19,7 @@ class DistilleryPanel extends Component {
         this.handleSaveMashBill = this.handleSaveMashBill.bind(this);
         this.handleDeleteMashBill = this.handleDeleteMashBill.bind(this);
         this.handleAddFermentingMash = this.handleAddFermentingMash.bind(this);
+        this.handleSaveFermentingMash = this.handleSaveFermentingMash.bind(this);
     }
 
     handleAddMashBill() {
@@ -33,10 +35,10 @@ class DistilleryPanel extends Component {
             mashBills: mashBills.concat([{
                 id: generateId('mashBill'),
                 name: name,
-                corn: corn / 100,
-                wheat: wheat / 100,
-                rye: rye / 100,
-                barley: barley / 100
+                corn: corn,
+                wheat: wheat,
+                rye: rye,
+                barley: barley,
             }])
         });
     }
@@ -54,6 +56,27 @@ class DistilleryPanel extends Component {
         })
     }
 
+    handleSaveFermentingMash(name, corn, wheat, rye, barley, yeast) {
+        this.props.handleInventoryChange('corn', -corn);
+        this.props.handleInventoryChange('wheat', -wheat);
+        this.props.handleInventoryChange('rye', -rye);
+        this.props.handleInventoryChange('barley', -barley);
+        this.props.handleInventoryChange('yeast', -yeast);
+        const fermentingMash = this.state.fermentingMash.slice();
+        this.setState({
+            fermentingMash: fermentingMash.concat([{
+                id: generateId('mash'),
+                name: name,
+                corn: corn,
+                wheat: wheat,
+                rye: rye,
+                barley: barley,
+                yeast: yeast
+            }]),
+            showFermentingMashForm: !this.state.showFermentingMashForm
+        })
+    }
+
     render() {
         return (
             <React.Fragment>
@@ -67,20 +90,20 @@ class DistilleryPanel extends Component {
                                     <p>No mash bills</p>
                                 </React.Fragment>
                             ) : (
-                                <React.Fragment>
-                                    {this.state.mashBills.map((mashBill) => (
-                                        <MashBill
-                                            id={mashBill.id}
-                                            key={mashBill.id}
-                                            name={mashBill.name}
-                                            corn={mashBill.corn}
-                                            wheat={mashBill.wheat}
-                                            rye={mashBill.rye}
-                                            barley={mashBill.barley}
-                                            handleDeleteMashBill={this.handleDeleteMashBill}
-                                    />))}
-                                </React.Fragment>
-                            )}
+                                    <React.Fragment>
+                                        {this.state.mashBills.map((mashBill) => (
+                                            <MashBill
+                                                id={mashBill.id}
+                                                key={mashBill.id}
+                                                name={mashBill.name}
+                                                corn={mashBill.corn}
+                                                wheat={mashBill.wheat}
+                                                rye={mashBill.rye}
+                                                barley={mashBill.barley}
+                                                handleDeleteMashBill={this.handleDeleteMashBill}
+                                            />))}
+                                    </React.Fragment>
+                                )}
                         </p>
                         <p>
                             <Button
@@ -100,11 +123,25 @@ class DistilleryPanel extends Component {
                         {this.state.fermentingMash.length === 0 ? (
                             <p>Nothing fermenting.</p>
                         ) : (
-                            <React.Fragment>
-
-                            </React.Fragment>
-                        )}
-                        <Button intent="success" onClick={this.handleAddFermentingMash}>Ferment Mash</Button>
+                                <React.Fragment>
+                                    {this.state.fermentingMash.map((mash) => (
+                                        <Mash
+                                            id={mash.id}
+                                            key={mash.key}
+                                            corn={mash.corn}
+                                            wheat={mash.wheat}
+                                            rye={mash.rye}
+                                            barley={mash.barley}
+                                            yeast={mash.yeast}
+                                        />
+                                    ))}
+                                </React.Fragment>
+                            )}
+                        <Button
+                            intent="success"
+                            onClick={this.handleAddFermentingMash}
+                            disabled={this.state.mashBills.length === 0}
+                        >Ferment Mash</Button>
                     </Card>
                     <Dialog
                         className="fermentingMashDialog"
@@ -113,6 +150,9 @@ class DistilleryPanel extends Component {
                     >
                         <FermentingMashForm
                             mashBills={this.state.mashBills}
+                            inventory={this.props.inventory}
+                            handleClose={this.handleAddFermentingMash}
+                            handleSave={this.handleSaveFermentingMash}
                         />
                     </Dialog>
                 </div>

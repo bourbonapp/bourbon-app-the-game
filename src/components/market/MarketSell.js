@@ -38,6 +38,8 @@ const sellValue = {
     rye: 7.50,
     barley: 10.00,
     yeast: 0.25,
+    usedBarrels: 25.00,
+    newBarrels: 65.00,
 }
 
 export default MarketSell;
