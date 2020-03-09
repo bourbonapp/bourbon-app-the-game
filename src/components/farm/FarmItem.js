@@ -27,7 +27,7 @@ class FarmItem extends Component {
     componentWillUnmount() {
         clearInterval(this.interval);
     }
-    
+
     render() {
         let cardContent = (
             <React.Fragment>

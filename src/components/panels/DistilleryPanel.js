@@ -10,8 +10,15 @@ class DistilleryPanel extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            mashBills: [],
-            fermentingMash: [],
+            mashBills: [{
+                id: generateId('mashBill'),
+                name: 'Default mash bill',
+                corn: 55,
+                wheat: 40,
+                rye: 5,
+                barley: 0,
+            }],
+            mashes: [],
             showMashBillForm: false,
             showFermentingMashForm: false,
         }
@@ -20,6 +27,7 @@ class DistilleryPanel extends Component {
         this.handleDeleteMashBill = this.handleDeleteMashBill.bind(this);
         this.handleAddFermentingMash = this.handleAddFermentingMash.bind(this);
         this.handleSaveFermentingMash = this.handleSaveFermentingMash.bind(this);
+        this.handleFerment = this.handleFerment.bind(this);
     }
 
     handleAddMashBill() {
@@ -62,18 +70,32 @@ class DistilleryPanel extends Component {
         this.props.handleInventoryChange('rye', -rye);
         this.props.handleInventoryChange('barley', -barley);
         this.props.handleInventoryChange('yeast', -yeast);
-        const fermentingMash = this.state.fermentingMash.slice();
+        const fermentingMash = this.state.mashes.slice();
         this.setState({
-            fermentingMash: fermentingMash.concat([{
+            mashes: fermentingMash.concat([{
                 id: generateId('mash'),
                 name: name,
                 corn: corn,
                 wheat: wheat,
                 rye: rye,
                 barley: barley,
-                yeast: yeast
+                yeast: yeast,
+                fermenting: true
             }]),
             showFermentingMashForm: !this.state.showFermentingMashForm
+        })
+    }
+
+    handleFerment(mashId) {
+        let mashes = this.state.mashes.slice();
+        for (var i in mashes) {
+            if (mashes[i].id === mashId) {
+                mashes[i].fermenting = false;
+                break;
+            }
+        }
+        this.setState({
+            mashes: mashes
         })
     }
 
@@ -120,11 +142,11 @@ class DistilleryPanel extends Component {
                     </Dialog>
                     <Card className="fermantationVats" elevation="1">
                         <h3>Fermantation Vats</h3>
-                        {this.state.fermentingMash.length === 0 ? (
+                        {this.state.mashes.filter(mash => mash.fermenting).length === 0 ? (
                             <p>Nothing fermenting.</p>
                         ) : (
                                 <React.Fragment>
-                                    {this.state.fermentingMash.map((mash) => (
+                                    {this.state.mashes.filter(mash => mash.fermenting).map((mash) => (
                                         <Mash
                                             id={mash.id}
                                             key={mash.key}
@@ -133,6 +155,9 @@ class DistilleryPanel extends Component {
                                             rye={mash.rye}
                                             barley={mash.barley}
                                             yeast={mash.yeast}
+                                            fermenting={mash.fermenting}
+                                            handleFerment={this.handleFerment}
+                                            handleToast={this.props.handleToast}
                                         />
                                     ))}
                                 </React.Fragment>
@@ -155,6 +180,30 @@ class DistilleryPanel extends Component {
                             handleSave={this.handleSaveFermentingMash}
                         />
                     </Dialog>
+                    <Card
+                        className="still"
+                    >
+                        <h3>Still</h3>
+                        {this.state.mashes.filter(mash => !mash.fermenting).length === 0 ? (
+                            <p>Nothing to distill</p>
+                        ) : (
+                                <React.Fragment>
+                                    {this.state.mashes.filter(mash => !mash.fermenting).map(mash => (
+                                        <Mash
+                                            id={mash.id}
+                                            key={mash.key}
+                                            corn={mash.corn}
+                                            wheat={mash.wheat}
+                                            rye={mash.rye}
+                                            barley={mash.barley}
+                                            yeast={mash.yeast}
+                                            fermenting={mash.fermenting}
+                                            handleToast={this.props.handleToast}
+                                        />
+                                    ))}
+                                </React.Fragment>
+                            )}
+                    </Card>
                 </div>
             </React.Fragment>
         )

@@ -30,10 +30,18 @@ class FermentingMashForm extends Component {
     }
 
     canAffordMash() {
+
+        console.log(this.calculateTotal());
+        console.log(minTotal);
+        console.log('total: ' + parseInt(this.calculateTotal()) >= parseInt(minTotal));
+        console.log('yeast: ' + this.calculateYeast() <= this.props.inventory.yeast);
+        console.log('corn: ' + this.corn <= this.props.inventory.corn);
+        console.log('wheat: ' + this.wheat <= this.props.inventory.wheat);
+        console.log('rye: ' + this.rye <= this.props.inventory.rye);
+        console.log('barley: ' + this.barley <= this.props.inventory.barley);
         let retVal = (this.calculateTotal() >= minTotal && this.calculateYeast() <= this.props.inventory.yeast &&
             this.corn <= this.props.inventory.corn && this.wheat <= this.props.inventory.wheat &&
             this.rye <= this.props.inventory.rye && this.barley <= this.props.inventory.barley);
-        console.log(retVal);
         return retVal;
     }
 
@@ -65,7 +73,7 @@ class FermentingMashForm extends Component {
         return (
             <React.Fragment>
                 <h2>Ferment a mash bill</h2>
-                <p>(Requires a minimum of {minTotal} ingredients total and {yeastPercentage.toFixed(2)}% yeast)</p>
+                <p>(Requires a minimum of {minTotal} ingredients total and {(yeastPercentage * 100).toFixed(2)}% yeast)</p>
                 <FormGroup
                     inline={true}
                     label="Mash Bill"
@@ -107,7 +115,7 @@ class FermentingMashForm extends Component {
                         this.state.barley,
                         this.calculateYeast()
                     )}
-                    disabled={!this.canAffordMash()}
+                //disabled={!this.canAffordMash()}
                 >Start Fermenting</Button>
                 <Button intent="danger" onClick={this.props.handleClose}>Cancel</Button>
             </React.Fragment>

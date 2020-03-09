@@ -75,6 +75,7 @@ class Dashboard extends Component {
                         panel={<DistilleryPanel
                             inventory={this.state.inventory}
                             handleInventoryChange={this.handleInventoryChange}
+                            handleToast={this.handleToast}
                         />}
                     />
                     <Tab
