@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { Card, Intent, ProgressBar } from '@blueprintjs/core';
+import { Card, Dialog, Intent, ProgressBar } from '@blueprintjs/core';
 import { randomNumber } from '../Utility';
+import BarrelingForm from './BarrelingForm';
 
 class Mash extends Component {
     constructor(props) {
@@ -10,6 +11,7 @@ class Mash extends Component {
             distilled: false,
             notified: false,
             startDistill: false,
+            showBarrelingForm: false,
         }
         const averageTime = this.calculateTotal() / this.props.yeast;
         console.log(this.calculateTotal());
@@ -20,6 +22,8 @@ class Mash extends Component {
         this.getInteractive = this.getInteractive.bind(this);
         this.getCardContent = this.getCardContent.bind(this);
         this.handleOnClick = this.handleOnClick.bind(this);
+        this.handleBarrelingForm = this.handleBarrelingForm.bind(this);
+        this.handleBarrelingFormSave = this.handleBarrelingFormSave.bind(this);
     }
 
     setDistillTimer(amount) {
@@ -138,6 +142,16 @@ class Mash extends Component {
         }
     }
 
+    handleBarrelingForm() {
+        this.setState({
+            showBarrelingForm: !this.state.showBarrelingForm
+        });
+    }
+
+    handleBarrelingFormSave() {
+        return null;
+    }
+
     render() {
         const cardContent = this.getCardContent();
         const interactive = this.getInteractive();
@@ -150,6 +164,22 @@ class Mash extends Component {
             >
                 <p>{this.props.name} mash</p>
                 {cardContent}
+                <Dialog
+                    className="barrelingDialog"
+                    isOpen={this.state.showBarrelingForm}
+                    onClose={this.handleBarrelingForm}
+                >
+                    <BarrelingForm
+                        corn={this.props.corn}
+                        wheat={this.props.wheat}
+                        rye={this.props.rye}
+                        barley={this.props.barley}
+                        yeast={this.props.yeast}
+                        mash={this.props.mash}
+                        handleClose={this.handleBarrelingForm}
+                        handleSave={this.handleBarrelingFormSave}
+                    />
+                </Dialog>
             </Card>
         )
     }

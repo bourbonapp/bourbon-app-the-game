@@ -21,6 +21,7 @@ class DistilleryPanel extends Component {
             mashes: [],
             showMashBillForm: false,
             showFermentingMashForm: false,
+            barrels: [],
         }
         this.handleAddMashBill = this.handleAddMashBill.bind(this);
         this.handleSaveMashBill = this.handleSaveMashBill.bind(this);
@@ -97,6 +98,13 @@ class DistilleryPanel extends Component {
         this.setState({
             mashes: mashes
         })
+    }
+
+    handleBarreling(barrels) {
+        const oldBarrels = this.state.barrels;
+        this.setState({
+            barrels: oldBarrels.concat(barrels),
+        });
     }
 
     render() {
@@ -192,17 +200,34 @@ class DistilleryPanel extends Component {
                                         <Mash
                                             id={mash.id}
                                             key={mash.key}
+                                            mash={mash}
                                             corn={mash.corn}
                                             wheat={mash.wheat}
                                             rye={mash.rye}
                                             barley={mash.barley}
                                             yeast={mash.yeast}
                                             fermenting={mash.fermenting}
+                                            handleBarreling={this.handleBarreling}
                                             handleToast={this.props.handleToast}
                                         />
                                     ))}
                                 </React.Fragment>
                             )}
+                    </Card>
+                    <Card
+                        className="barreling"
+                    >
+                        <h3>Barreling Station</h3>
+                        {this.state.barrels.length === 0 ? (
+                            <p>No barrels yet...</p>
+                        ) : (
+                                <p>Barrels aging!</p>
+                            )}
+                    </Card>
+                    <Card
+                        className="warehouse"
+                    >
+                        <h3>Warehouse</h3>
                     </Card>
                 </div>
             </React.Fragment>
