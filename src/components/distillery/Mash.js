@@ -17,7 +17,8 @@ class Mash extends Component {
         console.log(averageTime);
         this.distillTime = randomNumber(Math.ceil(averageTime * 0.75), Math.ceil(averageTime * 1.25));
 
-        this.handleInteractive = this.handleInteractive.bind(this);
+        this.getInteractive = this.getInteractive.bind(this);
+        this.getCardContent = this.getCardContent.bind(this);
         this.handleOnClick = this.handleOnClick.bind(this);
     }
 
@@ -48,33 +49,10 @@ class Mash extends Component {
                 this.props.barley * MULTIPLIERS.barley)
     }
 
-    handleInteractive() {
-        if (this.props.fermenting) {
-            return this.state.progress >= 1.0;
-        }
-        return !this.startDistill || this.state.progress >= 1.0;
-    }
-
-    handleOnClick() {
-        if (this.props.fermenting) {
-            if (this.state.progress >= 1.0) {
-                this.props.handleFerment(this.props.id);
-            }
-        } else {
-            if (!this.state.startDistill) {
-                this.setState({
-                    startDistill: true
-                })
-                this.setDistillTimer(10);
-            }
-        }
-    }
-
-    render() {
-        let cardContent = null;
+    getCardContent() {
         if (this.props.fermenting) {
             if (this.state.progress < 1.0) {
-                cardContent = (
+                return (
                     <React.Fragment>
                         Progress:
                         <ProgressBar
@@ -95,7 +73,7 @@ class Mash extends Component {
                         notified: true
                     })
                 }
-                cardContent = (
+                return (
                     <React.Fragment>
                         <p>Done!</p>
                     </React.Fragment>
@@ -103,7 +81,7 @@ class Mash extends Component {
             }
         } else {
             if (!this.state.startDistill) {
-                cardContent = (
+                return (
                     <React.Fragment>
                         <p>Click to start distilling!</p>
                         <p>Distill will take {'10'}s</p>
@@ -111,7 +89,7 @@ class Mash extends Component {
                 );
             } else {
                 if (this.state.progress < 1.0) {
-                    cardContent = (
+                    return (
                         <React.Fragment>
                             Progress:
                             <ProgressBar
@@ -122,7 +100,8 @@ class Mash extends Component {
                         </React.Fragment>
                     );
                 } else {
-                    cardContent = (
+                    clearInterval(this.interval);
+                    return (
                         <React.Fragment>
                             <p>Distilling complete!</p>
                             <p>Click to barrel ({'X'} barrels)</p>
@@ -131,11 +110,42 @@ class Mash extends Component {
                 }
             }
         }
+    }
+
+    getInteractive() {
+        if (this.props.fermenting) {
+            console.log('Interactive: ' + this.state.progress >= 1.0);
+            return this.state.progress >= 1.0;
+        }
+        console.log('Interactive: ');
+        console.log(!this.state.startDistill);
+        console.log(this.state.progress >= 1.0);
+        return !this.state.startDistill || this.state.progress >= 1.0;
+    }
+
+    handleOnClick() {
+        if (this.props.fermenting) {
+            if (this.state.progress >= 1.0) {
+                this.props.handleFerment(this.props.id);
+            }
+        } else {
+            if (!this.state.startDistill) {
+                this.setState({
+                    startDistill: true
+                })
+                this.setDistillTimer(10);
+            }
+        }
+    }
+
+    render() {
+        const cardContent = this.getCardContent();
+        const interactive = this.getInteractive();
 
         return (
             <Card
                 elevation="2"
-                interactive={this.handleInteractive}
+                interactive={interactive}
                 onClick={this.handleOnClick}
             >
                 <p>{this.props.name} mash</p>
